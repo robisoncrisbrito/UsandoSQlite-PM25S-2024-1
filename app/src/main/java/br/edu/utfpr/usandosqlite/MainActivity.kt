@@ -42,14 +42,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun btAlterarOnClick(view: View) {
+        val registro = ContentValues()
+        registro.put( "nome", etNome.text.toString() )
+        registro.put( "telefone", etTelefone.text.toString() )
 
+        banco.update( "cadastro", registro, "_id="+etCod.text.toString(), null )
+
+        Toast.makeText( this, "Registro alterado com sucesso", Toast.LENGTH_LONG ).show()
     }
 
     fun btExcluirOnClick(view: View) {
 
+        banco.delete( "cadastro","_id="+etCod.text.toString(), null )
+
+        Toast.makeText( this, "Registro excluido com sucesso", Toast.LENGTH_LONG ).show()
+
     }
 
     fun btPesquisarOnClick(view: View) {
+        val cursor =  banco.query( "cadastro", null, "_id=${etCod.text.toString()}", null, null, null, null )
+
+        if ( cursor.moveToNext() ) {
+            etNome.setText ( cursor.getString( 1 ) )
+            etTelefone.setText( cursor.getString( 2 ) )
+        } else {
+            Toast.makeText( this, "Registro nao encontrado", Toast.LENGTH_LONG ).show()
+        }
 
     }
 
